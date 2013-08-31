@@ -12,7 +12,8 @@ void ADXL345::SetupADXL345()
 {
 	byte dataFormat = 0x31;
 	byte powerCTL = 0x2D; //Power Control Register
-	i2c.WriteRegister(deviceAddress, 0x31, 0x01); //Put the ADXL345 into +/- 4G range by writing the value 0x01 to the DATA_FORMAT register.
+	//i2c.WriteRegister(deviceAddress, 0x31, 0x01); //Put the ADXL345 into +/- 4G range by writing the value 0x01 to the DATA_FORMAT register.
+	i2c.WriteRegister(deviceAddress, 0x31, 0x09); //Put the ADXL345 into Full Resolution Mode
 	i2c.WriteRegister(deviceAddress, 0x2D, 0x08); //Put the ADXL345 into Measurement Mode by writing 0x08 to the POWER_CTL register.
 }
 
@@ -31,4 +32,5 @@ void ADXL345::UpdateAccelValues()
 	z = ((zMSB << 8) | zLSB);
 }
 
+// Based on: https://github.com/jenschr/Arduino-libraries/blob/master/ADXL345/examples/ADXL345_no_library/BareBones_ADXL345.pde
 // http://www.analog.com/static/imported-files/data_sheets/ADXL345.pdf

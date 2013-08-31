@@ -1,15 +1,16 @@
 #include <Wire.h>
+#include <Servo.h>
+//Custom libraries
 #include <TxRx.h>
-#include <Motors.h>
-#include <Servo.h> 
 #include <I2C.h>
 #include <L3G4200D.h>
 #include <ADXL345.h>
+#include <Motors.h>
 
 TxRx txrx;
-Motors motors;
 L3G4200D gyro;
 ADXL345 accel;
+Motors motors;
 
 Servo frontLeft;
 Servo frontRight;
@@ -37,10 +38,10 @@ void setup()
 void loop()
 { 
   Input();
-  Update2();
+  UpdateSensorAssisted();
+  //UpdateManual();
   Thrust();
-  
-  delay(10);
+  delay(100);
 }
 
 void Input() {
@@ -49,7 +50,7 @@ void Input() {
   accel.UpdateAccelValues();
 }
 
-void Update2()
+void UpdateSensorAssisted()
 {
   Serial.print("gyro: ");
   Serial.print(gyro.GetX());
@@ -63,9 +64,12 @@ void Update2()
   Serial.print(accel.GetY());
   Serial.print(" ");
   Serial.println(accel.GetZ());
+  //Serial.print(Complementary(gyro.GetX(), accel.GetX(), 10));
+  //Serial.print(" ");
+  //Serial.println(Complementary(gyro.GetY(), accel.GetY(), 10));
 }
 
-void Update() {
+void UpdateManual() {
   int roll = 85 - map(txrx.getCh1(), 1500, 2400, 0, 180);
   int pitch = 82 - map(txrx.getCh2(), 1500, 2400, 0, 180);
   int throttle = map(txrx.getCh3(), 1500, 2400, 0, 180);
@@ -86,10 +90,10 @@ void Update() {
   //Serial.print("throttle="); Serial.print(throttle); Serial.print(" ch1="); Serial.print(txrx.getCh1()); Serial.print(" ch2="); Serial.println(txrx.getCh2());
   //Serial.print("throttle="); Serial.print(throttle); Serial.print(" roll="); Serial.print(roll); Serial.print(" pitch="); Serial.println(pitch);
   
-  //motors.setFrontLeft(throttle - roll + pitch - yaw);
-  //motors.setFrontRight(throttle + roll + pitch + yaw);
-  //motors.setRearLeft(throttle - roll - pitch + yaw);
-  //motors.setRearRight(throttle + roll - pitch - yaw);
+  motors.frontLeft = throttle - roll + pitch - yaw;
+  motors.frontRight = throttle + roll + pitch + yaw;
+  motors.rearLeft = throttle - roll - pitch + yaw;
+  motors.rearRight = throttle + roll - pitch - yaw;
   
   //Serial.print("frontleft="); Serial.print(motors.getFrontLeft()); Serial.print(" frontright="); Serial.print(motors.getFrontRight());
   //Serial.print(" rearleft="); Serial.print(motors.getRearLeft()); Serial.print(" rearright="); Serial.println(motors.getRearRight());
@@ -101,3 +105,17 @@ void Thrust() {
   rearLeft.write(motors.rearLeft);
   rearRight.write(motors.rearRight);
 }
+
+float tau=0.075;
+float a=0.0;
+
+
+float Complementary(float newAngle, float newRate,int looptime) {
+  float dtC = float(looptime)/1000.0;
+  float x_angleC = newRate;  
+  a=tau/(tau+dtC) ;
+  x_angleC= a* (x_angleC + newRate * dtC) + (1-a) * (newAngle);
+
+  return x_angleC;
+}
+
