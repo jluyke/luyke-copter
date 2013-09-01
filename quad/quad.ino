@@ -1,6 +1,6 @@
 #include <Wire.h>
 #include <Servo.h>
-//Custom libraries
+//Custom headers
 #include <TxRx.h>
 #include <I2C.h>
 #include <L3G4200D.h>
@@ -14,22 +14,22 @@ ADXL345 accel;
 Motors motors;
 ComplementaryFilter filter;
 
-Servo frontLeft;
-Servo frontRight;
-Servo rearLeft;
-Servo rearRight;
+Servo frontLeftEsc;
+Servo frontRightEsc;
+Servo rearLeftEsc;
+Servo rearRightEsc;
 
 void setup() 
 {
   Wire.begin();
   
-  frontLeft.attach(5);
-  frontRight.attach(6);
-  rearLeft.attach(9);
-  rearRight.attach(10);
+  frontLeftEsc.attach(5);
+  frontRightEsc.attach(6);
+  rearLeftEsc.attach(9);
+  rearRightEsc.attach(10);
   
-  gyro.SetupL3G4200D(2000);
-  accel.SetupADXL345();
+  gyro.Setup(2000);
+  accel.Setup();
   
   Serial.begin(9600);
   Serial.println("initializing");
@@ -48,8 +48,8 @@ void loop()
 
 void Input() {
   //txrx.Receive();
-  gyro.UpdateGyroValues();
-  accel.UpdateAccelValues();
+  gyro.Receive();
+  accel.Receive();
 }
 
 void UpdateSensorAssisted()
@@ -74,14 +74,14 @@ void UpdateSensorAssisted()
 }
 
 void UpdateManual() {
-  int roll = 85 - map(txrx.getCh1(), 1500, 2400, 0, 180);
-  int pitch = 82 - map(txrx.getCh2(), 1500, 2400, 0, 180);
-  int throttle = map(txrx.getCh3(), 1500, 2400, 0, 180);
-  int yaw = 82 - map(txrx.getCh4(), 1500, 2400, 0, 180);
+  int roll = 85 - map(txrx.GetCh1(), 1500, 2400, 0, 180);
+  int pitch = 82 - map(txrx.GetCh2(), 1500, 2400, 0, 180);
+  int throttle = map(txrx.GetCh3(), 1500, 2400, 0, 180);
+  int yaw = 82 - map(txrx.GetCh4(), 1500, 2400, 0, 180);
   roll /= 8;
   pitch /= 8;
   yaw /= 8;
-  if (throttle < 25) { 
+  if (throttle < 25) {
     throttle = 25;
     roll = 0;
     pitch = 0;
@@ -101,8 +101,8 @@ void UpdateManual() {
 }
 
 void Thrust() {
-  frontLeft.write(motors.frontLeft);
-  frontRight.write(motors.frontRight);
-  rearLeft.write(motors.rearLeft);
-  rearRight.write(motors.rearRight);
+  frontLeftEsc.write(motors.frontLeft);
+  frontRightEsc.write(motors.frontRight);
+  rearLeftEsc.write(motors.rearLeft);
+  rearRightEsc.write(motors.rearRight);
 }

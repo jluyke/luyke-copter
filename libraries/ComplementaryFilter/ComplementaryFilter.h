@@ -6,7 +6,7 @@
 class ComplementaryFilter
 {
 	public:
-		void UpdateWithFilter(int gXInput, int gYInput, int aXInput, int aYInput);
+		void UpdateWithFilter(int gyroXInput, int gyroYInput, int accelXInput, int accelYInput);
 		float GetPitch() { return pitch; }
 		float GetRoll() { return roll; }
 	private:

@@ -6,7 +6,7 @@ ADXL345::ADXL345()
 	deviceAddress = 0x53;
 }
 
-void ADXL345::SetupADXL345()
+void ADXL345::Setup()
 {
 	byte dataFormat = 0x31;
 	byte powerCTL = 0x2D; //Power Control Register
@@ -14,7 +14,7 @@ void ADXL345::SetupADXL345()
 	i2c.WriteRegister(deviceAddress, 0x2D, 0x08); //Put the ADXL345 into Measurement Mode by writing 0x08 to the POWER_CTL register.
 }
 
-void ADXL345::UpdateAccelValues()
+void ADXL345::Receive()
 {
 	byte xLSB = i2c.ReadRegister(deviceAddress, 0x32);
 	byte xMSB = i2c.ReadRegister(deviceAddress, 0x33);

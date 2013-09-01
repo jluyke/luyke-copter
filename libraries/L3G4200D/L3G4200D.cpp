@@ -6,22 +6,22 @@ L3G4200D::L3G4200D()
 	deviceAddress = 0x69;
 }
 
-void L3G4200D::SetupL3G4200D(int scale)
+void L3G4200D::Setup(int scale)
 {
 	i2c.WriteRegister(deviceAddress, CTRL_REG1, 0b00001111); // Enable x, y, z and turn off power down:
 	i2c.WriteRegister(deviceAddress, CTRL_REG2, 0b00011001); // High Pass Filter
 	i2c.WriteRegister(deviceAddress, CTRL_REG3, 0b00000000); // Configure CTRL_REG3 to generate data ready interrupt on INT2
 	if (scale == 250) { // CTRL_REG4 controls the full-scale range, among other things
 		i2c.WriteRegister(deviceAddress, CTRL_REG4, 0b00000000);
-	} else if(scale == 500) {
+	} else if (scale == 500) {
 		i2c.WriteRegister(deviceAddress, CTRL_REG4, 0b00010000);
-	} else if(scale == 2000) {
+	} else if (scale == 2000) {
 		i2c.WriteRegister(deviceAddress, CTRL_REG4, 0b10110000);
 	}
 	i2c.WriteRegister(deviceAddress, CTRL_REG5, 0b00010011); // CTRL_REG5 controls high-pass filtering of outputs
 }
 
-void L3G4200D::UpdateGyroValues()
+void L3G4200D::Receive()
 {
 	byte xLSB = i2c.ReadRegister(deviceAddress, 0x28);
 	byte xMSB = i2c.ReadRegister(deviceAddress, 0x29);

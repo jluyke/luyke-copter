@@ -1,9 +1,9 @@
 #include "ComplementaryFilter.h"
 
-void ComplementaryFilter::UpdateWithFilter(int gXInput, int gYInput, int aXInput, int aYInput)
+void ComplementaryFilter::UpdateWithFilter(int gyroXInput, int gyroYInput, int accelYInput, int accelYInput)
 {
-	LowPassFilter(aXInput, aYInput);
-	HighPassFilter(gXInput, gYInput);
+	LowPassFilter(accelXInput, accelYInput);
+	HighPassFilter(gyroXInput, gyroYInput);
 	pitch = (1 - ALPHA) * (pitch + filteredGyroX * 0.01) + (ALPHA * filteredAccX);
 	roll = (1 - ALPHA) * (roll + filteredGyroY * 0.01) + (ALPHA * filteredAccY);
 }

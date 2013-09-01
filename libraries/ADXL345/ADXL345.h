@@ -8,8 +8,8 @@ class ADXL345
 {
 	public:
 		ADXL345();
-		void SetupADXL345();
-		void UpdateAccelValues();
+		void Setup();
+		void Receive();
 		int GetX() { return x; }
 		int GetY() { return y; }
 		int GetZ() { return z; }

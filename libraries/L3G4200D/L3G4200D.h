@@ -13,8 +13,8 @@ class L3G4200D
 {
 	public:
 		L3G4200D();
-		void SetupL3G4200D(int scale); // Configure L3G4200  - 250, 500 or 2000 deg/sec
-		void UpdateGyroValues();
+		void Setup(int scale); // Configure L3G4200  - 250, 500 or 2000 deg/sec
+		void Receive();
 		int GetX() { return x; }
 		int GetY() { return y; }
 		int GetZ() { return z; }
