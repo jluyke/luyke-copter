@@ -34,7 +34,7 @@ void setup()
   Serial.begin(9600);
   Serial.println("initializing");
   
-  delay(1500); //for l3g4200d
+  delay(1000);
 }
  
 void loop()
@@ -88,9 +88,6 @@ void UpdateManual() {
     yaw = 0;
   }
   
-  //float throttle = (float(txrx.Ch3) - 1500) * (180 - 0) / (2400 - 1500) + 0;
-  
-  //Serial.println(yaw);
   //Serial.print("throttle="); Serial.print(throttle); Serial.print(" ch1="); Serial.print(txrx.getCh1()); Serial.print(" ch2="); Serial.println(txrx.getCh2());
   //Serial.print("throttle="); Serial.print(throttle); Serial.print(" roll="); Serial.print(roll); Serial.print(" pitch="); Serial.println(pitch);
   

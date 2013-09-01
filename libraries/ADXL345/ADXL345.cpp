@@ -1,6 +1,4 @@
 #include "ADXL345.h"
-#include "Arduino.h"
-#include "Wire.h"
 #include "I2C.h"
 
 ADXL345::ADXL345() 

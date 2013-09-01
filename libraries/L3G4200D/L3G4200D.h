@@ -7,7 +7,6 @@
 #define CTRL_REG4 0x23
 #define CTRL_REG5 0x24
 
-#include "Arduino.h"
 #include "I2C.h"
 
 class L3G4200D

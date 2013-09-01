@@ -1,11 +1,4 @@
 #include "ComplementaryFilter.h"
-#include "Arduino.h"
-
-ComplementaryFilter::ComplementaryFilter()
-{
-	lastGyroXInput = 0;
-	lastGyroYInput = 0;
-}
 
 void ComplementaryFilter::UpdateWithFilter(int gXInput, int gYInput, int aXInput, int aYInput)
 {
@@ -23,8 +16,8 @@ void ComplementaryFilter::HighPassFilter(int x, int y) // gyroscope values
 
 void ComplementaryFilter::LowPassFilter(int x, int y) // accelerometer values
 {
-	filteredAccX = (1 - ALPHA) * (float)x + (ALPHA * filteredAccX);
-	filteredAccY = (1 - ALPHA) * (float)y + (ALPHA * filteredAccY);
+	filteredAccX = (1 - ALPHA) * x + (ALPHA * filteredAccX);
+	filteredAccY = (1 - ALPHA) * y + (ALPHA * filteredAccY);
 }
 
 // https://sites.google.com/site/myimuestimationexperience/filters/complementary-filter

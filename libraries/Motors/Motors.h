@@ -1,8 +1,6 @@
 #ifndef Motors_h
 #define Motors_h
 
-#include "Arduino.h"
-
 class Motors
 {
 	public:

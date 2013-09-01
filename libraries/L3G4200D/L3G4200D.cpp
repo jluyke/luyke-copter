@@ -1,6 +1,4 @@
 #include "L3G4200D.h"
-#include "Arduino.h"
-#include "Wire.h"
 #include "I2C.h"
 
 L3G4200D::L3G4200D()

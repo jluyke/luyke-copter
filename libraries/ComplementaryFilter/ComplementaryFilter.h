@@ -2,12 +2,10 @@
 #define ComplementaryFilter_h
 
 #define ALPHA 0.6
-#include "Arduino.h"
 
 class ComplementaryFilter
 {
 	public:
-		ComplementaryFilter();
 		void UpdateWithFilter(int gXInput, int gYInput, int aXInput, int aYInput);
 		float GetPitch() { return pitch; }
 		float GetRoll() { return roll; }

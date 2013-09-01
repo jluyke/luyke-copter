@@ -2,6 +2,7 @@
 #define I2C_h
 
 #include "Arduino.h"
+#include "Wire.h"
 
 class I2C
 {
