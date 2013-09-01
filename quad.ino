@@ -6,11 +6,13 @@
 #include <L3G4200D.h>
 #include <ADXL345.h>
 #include <Motors.h>
+#include <ComplementaryFilter.h>
 
 TxRx txrx;
 L3G4200D gyro;
 ADXL345 accel;
 Motors motors;
+ComplementaryFilter filter;
 
 Servo frontLeft;
 Servo frontRight;
@@ -41,7 +43,7 @@ void loop()
   UpdateSensorAssisted();
   //UpdateManual();
   Thrust();
-  delay(100);
+  delay(10);
 }
 
 void Input() {
@@ -52,7 +54,12 @@ void Input() {
 
 void UpdateSensorAssisted()
 {
-  Serial.print("gyro: ");
+  filter.UpdateWithFilter(gyro.GetX(), gyro.GetY(), accel.GetX(), accel.GetY());
+  Serial.print(filter.GetPitch());
+  Serial.print(" ");
+  Serial.println(filter.GetRoll());
+  
+  /*Serial.print("gyro: ");
   Serial.print(gyro.GetX());
   Serial.print(" ");
   Serial.print(gyro.GetY());
@@ -63,10 +70,7 @@ void UpdateSensorAssisted()
   Serial.print(" ");
   Serial.print(accel.GetY());
   Serial.print(" ");
-  Serial.println(accel.GetZ());
-  //Serial.print(Complementary(gyro.GetX(), accel.GetX(), 10));
-  //Serial.print(" ");
-  //Serial.println(Complementary(gyro.GetY(), accel.GetY(), 10));
+  Serial.println(accel.GetZ());*/
 }
 
 void UpdateManual() {
@@ -105,17 +109,3 @@ void Thrust() {
   rearLeft.write(motors.rearLeft);
   rearRight.write(motors.rearRight);
 }
-
-float tau=0.075;
-float a=0.0;
-
-
-float Complementary(float newAngle, float newRate,int looptime) {
-  float dtC = float(looptime)/1000.0;
-  float x_angleC = newRate;  
-  a=tau/(tau+dtC) ;
-  x_angleC= a* (x_angleC + newRate * dtC) + (1-a) * (newAngle);
-
-  return x_angleC;
-}
-

@@ -2,12 +2,6 @@
 #include "Arduino.h"
 #include "Wire.h"
 
-
-I2C::I2C() 
-{
-	//
-}
-
 void I2C::WriteRegister(int deviceAddress, byte address, byte val) 
 {
     Wire.beginTransmission(deviceAddress); // start transmission to device

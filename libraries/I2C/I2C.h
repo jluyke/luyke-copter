@@ -6,7 +6,6 @@
 class I2C
 {
 	public:
-		I2C();
 		void WriteRegister(int deviceAddress, byte address, byte val);
 		int ReadRegister(int deviceAddress, byte address);
 	private:
