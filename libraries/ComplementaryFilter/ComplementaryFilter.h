@@ -2,11 +2,12 @@
 #define ComplementaryFilter_h
 
 #define ALPHA 0.6
+#define DT 0.001
 
 class ComplementaryFilter
 {
 	public:
-		void UpdateWithFilter(int gyroXInput, int gyroYInput, int accelXInput, int accelYInput);
+		void UpdateWithFilter(int accelXInput, int accelYInput, int gyroXInput, int gyroYInput);
 		float GetPitch() { return pitch; }
 		float GetRoll() { return roll; }
 	private:

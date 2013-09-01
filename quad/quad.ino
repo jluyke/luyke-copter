@@ -31,33 +31,44 @@ void setup()
   gyro.Setup(2000);
   accel.Setup();
   
-  Serial.begin(9600);
-  Serial.println("initializing");
+  //delay(1000);
   
-  delay(1000);
+  //Serial.begin(9600);
+  //Serial.println("initializing");
 }
- 
+
 void loop()
 { 
   Input();
   UpdateSensorAssisted();
   //UpdateManual();
   Thrust();
-  delay(10);
+  //delay(1);
 }
 
-void Input() {
-  //txrx.Receive();
+void Input() 
+{
+  txrx.Receive();
   gyro.Receive();
   accel.Receive();
 }
 
 void UpdateSensorAssisted()
 {
-  filter.UpdateWithFilter(gyro.GetX(), gyro.GetY(), accel.GetX(), accel.GetY());
-  Serial.print(filter.GetPitch());
-  Serial.print(" ");
-  Serial.println(filter.GetRoll());
+  txrx.Update();
+  
+  filter.UpdateWithFilter(accel.GetX(), accel.GetY(), gyro.GetX(), gyro.GetY()); //-260 to 260
+  
+  float offsetPitch = -20;
+  float offsetRoll = 10;
+  motors.CalcThrustSensorAssisted(filter.GetPitch()+offsetPitch, filter.GetRoll()+offsetRoll, txrx.GetPitch(), txrx.GetRoll(), txrx.GetThrottle(), txrx.GetYaw());
+  
+  //Serial.print("frontleft="); Serial.print(motors.GetFrontLeftThrust()); Serial.print(" frontright="); Serial.print(motors.GetFrontRightThrust());
+  //Serial.print(" rearleft="); Serial.print(motors.GetRearLeftThrust()); Serial.print(" rearright="); Serial.println(motors.GetRearRightThrust());
+  
+  //Serial.print(filter.GetPitch() + offsetPitch);
+  //Serial.print(" ");
+  //Serial.println(filter.GetRoll() + offsetRoll);
   
   /*Serial.print("gyro: ");
   Serial.print(gyro.GetX());
@@ -73,36 +84,19 @@ void UpdateSensorAssisted()
   Serial.println(accel.GetZ());*/
 }
 
-void UpdateManual() {
-  int roll = 85 - map(txrx.GetCh1(), 1500, 2400, 0, 180);
-  int pitch = 82 - map(txrx.GetCh2(), 1500, 2400, 0, 180);
-  int throttle = map(txrx.GetCh3(), 1500, 2400, 0, 180);
-  int yaw = 82 - map(txrx.GetCh4(), 1500, 2400, 0, 180);
-  roll /= 8;
-  pitch /= 8;
-  yaw /= 8;
-  if (throttle < 25) {
-    throttle = 25;
-    roll = 0;
-    pitch = 0;
-    yaw = 0;
-  }
+void UpdateManual() 
+{
+  txrx.Update();
+  motors.CalcThrustManual(txrx.GetPitch(), txrx.GetRoll(), txrx.GetThrottle(), txrx.GetYaw());
   
-  //Serial.print("throttle="); Serial.print(throttle); Serial.print(" ch1="); Serial.print(txrx.getCh1()); Serial.print(" ch2="); Serial.println(txrx.getCh2());
-  //Serial.print("throttle="); Serial.print(throttle); Serial.print(" roll="); Serial.print(roll); Serial.print(" pitch="); Serial.println(pitch);
-  
-  motors.frontLeft = throttle - roll + pitch - yaw;
-  motors.frontRight = throttle + roll + pitch + yaw;
-  motors.rearLeft = throttle - roll - pitch + yaw;
-  motors.rearRight = throttle + roll - pitch - yaw;
-  
-  //Serial.print("frontleft="); Serial.print(motors.getFrontLeft()); Serial.print(" frontright="); Serial.print(motors.getFrontRight());
-  //Serial.print(" rearleft="); Serial.print(motors.getRearLeft()); Serial.print(" rearright="); Serial.println(motors.getRearRight());
+  //Serial.print("frontleft="); Serial.print(motors.GetFrontLeftThrust()); Serial.print(" frontright="); Serial.print(motors.GetFrontRightThrust());
+  //Serial.print(" rearleft="); Serial.print(motors.GetRearLeftThrust()); Serial.print(" rearright="); Serial.println(motors.GetRearRightThrust());
 }
 
-void Thrust() {
-  frontLeftEsc.write(motors.frontLeft);
-  frontRightEsc.write(motors.frontRight);
-  rearLeftEsc.write(motors.rearLeft);
-  rearRightEsc.write(motors.rearRight);
+void Thrust() 
+{
+  frontLeftEsc.write(motors.GetFrontLeftThrust());
+  frontRightEsc.write(motors.GetFrontRightThrust());
+  rearLeftEsc.write(motors.GetRearLeftThrust());
+  rearRightEsc.write(motors.GetRearRightThrust());
 }
