@@ -19,7 +19,7 @@ int I2C::ReadRegister(int deviceAddress, byte address)
     Wire.requestFrom(deviceAddress, 1); // read a byte
     
 	int v = 0;
-	if (Wire.available()) {
+	while (Wire.available()) {
     	v = Wire.read();
     }
     return v;

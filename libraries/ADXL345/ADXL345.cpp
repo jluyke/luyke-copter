@@ -1,5 +1,4 @@
 #include "ADXL345.h"
-#include "I2C.h"
 
 ADXL345::ADXL345() 
 {

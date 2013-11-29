@@ -8,15 +8,9 @@ class TxRx
 	public:
 		void Receive();
 		void Update();
-		/* Unused
-		int GetCh1() { return ch1; };
-		int GetCh2() { return ch2; };
-		int GetCh3() { return ch3; };
-		int GetCh4() { return ch4; };
-		*/
 		int GetRoll() { return roll; }
 		int GetPitch() { return pitch; }
-		int GetThrottle() { return throttle; }
+		int GetThrottle() { return throttle-500; }
 		int GetYaw() { return yaw; }
 	private:
 		int ch1;
@@ -27,6 +21,7 @@ class TxRx
 		int pitch;
 		int throttle;
 		int yaw;
+		//Smoothing variables
 		int SmoothThrottle(int th);
 		int throttleSmooth[5] = {0, 0, 0, 0, 0};
 		int ind = 0;

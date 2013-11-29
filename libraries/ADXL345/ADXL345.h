@@ -1,7 +1,6 @@
 #ifndef ADXL345_h
 #define ADXL345_h
 
-#include "Arduino.h"
 #include "I2C.h"
 
 class ADXL345

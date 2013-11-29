@@ -1,5 +1,4 @@
 #include "L3G4200D.h"
-#include "I2C.h"
 
 L3G4200D::L3G4200D()
 {
@@ -9,6 +8,7 @@ L3G4200D::L3G4200D()
 void L3G4200D::Setup(int scale)
 {
 	i2c.WriteRegister(deviceAddress, CTRL_REG1, 0b00001111); // Enable x, y, z and turn off power down:
+	//i2c.WriteRegister(deviceAddress, CTRL_REG1, 0b01001111);
 	i2c.WriteRegister(deviceAddress, CTRL_REG2, 0b00011001); // High Pass Filter
 	i2c.WriteRegister(deviceAddress, CTRL_REG3, 0b00000000); // Configure CTRL_REG3 to generate data ready interrupt on INT2
 	if (scale == 250) { // CTRL_REG4 controls the full-scale range, among other things
@@ -18,7 +18,8 @@ void L3G4200D::Setup(int scale)
 	} else if (scale == 2000) {
 		i2c.WriteRegister(deviceAddress, CTRL_REG4, 0b10110000);
 	}
-	i2c.WriteRegister(deviceAddress, CTRL_REG5, 0b00010011); // CTRL_REG5 controls high-pass filtering of outputs
+	//i2c.WriteRegister(deviceAddress, CTRL_REG5, 0b00010011); // CTRL_REG5 controls high-pass filtering of outputs
+	//i2c.WriteRegister(deviceAddress, CTRL_REG5, 0b00111111);
 }
 
 void L3G4200D::Receive()

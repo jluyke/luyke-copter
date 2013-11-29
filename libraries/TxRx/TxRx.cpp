@@ -1,5 +1,4 @@
 #include "TxRx.h"
-#include "Arduino.h"
 
 void TxRx::Receive() 
 {
@@ -11,26 +10,21 @@ void TxRx::Receive()
 
 void TxRx::Update()
 {
-	roll = 85 - map(ch1, 1500, 2400, 0, 180);
-	pitch = 82 - map(ch2, 1500, 2400, 0, 180);
+	roll = 0;//ch1;
+	pitch = 0;//ch2;
 	throttle = SmoothThrottle(ch3);
-	throttle = map(throttle, 1500, 2400, 0, 180);
-	
-	yaw = 82 - map(ch4, 1500, 2400, 0, 180);
-	roll /= 8;
-	pitch /= 8;
-	yaw /= 8;
-	if (throttle < 25) {
-		throttle = 25;
-		roll = 0;
-		pitch = 0;
-		yaw = 0;
-	}
+	yaw = 0;//ch4;
+	//roll = ch1;
+	//pitch = ch2;
+	//yaw = ch4;
+	//roll /= 8;
+	//pitch /= 8;
+	//yaw /= 8;
 }
 
 int TxRx::SmoothThrottle(int th)
 {
-	int avg;
+	int avg = 0;
 	throttleSmooth[ind] = th;
 	for (int i = 0; i < 5; i++) {
 		avg += throttleSmooth[i];
