@@ -21,5 +21,3 @@ void ComplementaryFilter::HighPassFilter(int x, int y) // gyroscope values
 	lastGyroXInput = x;
 	lastGyroYInput = y;
 }
-
-// https://sites.google.com/site/myimuestimationexperience/filters/complementary-filter

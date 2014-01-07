@@ -12,7 +12,8 @@ void TxRx::Update()
 {
 	roll = 0;//ch1;
 	pitch = 0;//ch2;
-	throttle = SmoothThrottle(ch3);
+	//throttle = SmoothThrottle(ch3);
+	throttle = ch3;
 	yaw = 0;//ch4;
 	//roll = ch1;
 	//pitch = ch2;
@@ -22,7 +23,7 @@ void TxRx::Update()
 	//yaw /= 8;
 }
 
-int TxRx::SmoothThrottle(int th)
+/**int TxRx::SmoothThrottle(int th)
 {
 	int avg = 0;
 	throttleSmooth[ind] = th;
@@ -32,4 +33,4 @@ int TxRx::SmoothThrottle(int th)
 	ind++;
 	if (ind == 5) { ind = 0; }
 	return avg/5;
-}
+}**/

@@ -7,9 +7,13 @@
 class I2C
 {
 	public:
-		void WriteRegister(int deviceAddress, byte address, byte val);
-		int ReadRegister(int deviceAddress, byte address);
+		I2C();
+		void WriteRegister(int device_address, byte start_address, byte val); //change int to byte?
+		byte *ReadRegister(int device_address, byte start_address, int num_of_bytes);
 	private:
+		byte *buffer;
 };
 
 #endif
+
+// http://codeyoung.blogspot.com/2009/11/adxl345-accelerometer-breakout-board.html

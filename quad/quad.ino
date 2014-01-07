@@ -1,13 +1,13 @@
 #include <Wire.h>
 #include <Servo.h>
-#include <PID_v1.h>
-//Custom headers
+//Custom headers:
 #include <TxRx.h>
 #include <I2C.h>
 #include <L3G4200D.h>
 #include <ADXL345.h>
 #include <ComplementaryFilter.h>
 #include <Motors.h>
+#include <PID.h>
 
 TxRx txrx;
 L3G4200D gyro;
@@ -56,21 +56,27 @@ void Input()
 void UpdateSensorAssisted()
 {
   txrx.Update();
-  //Serial.println(txrx.GetPitch());
-  filter.UpdateWithFilter(accel.GetX(), accel.GetY(), gyro.GetX(), gyro.GetY()); //-260 to 260
-  
-  float offsetPitch = -8;
-  float offsetRoll = 5;
-  motors.CalcThrustSensorAssisted(filter.GetPitch()+offsetPitch, filter.GetRoll()+offsetRoll, gyro.GetX(), gyro.GetY(), txrx.GetPitch(), txrx.GetRoll(), txrx.GetThrottle(), txrx.GetYaw());
-  
-  //Serial.println(txrx.GetThrottle());
-  
-  //Serial.print("frontleft="); Serial.print(motors.GetFrontLeftThrust()); Serial.print(" frontright="); Serial.print(motors.GetFrontRightThrust());
-  //Serial.print(" rearleft="); Serial.print(motors.GetRearLeftThrust()); Serial.print(" rearright="); Serial.println(motors.GetRearRightThrust());
-  
-  //Serial.print(filter.GetPitch() + offsetPitch);
-  //Serial.print(" ");
-  //Serial.println(filter.GetRoll() + offsetRoll);
+  filter.UpdateWithFilter(accel.GetX()-21, accel.GetY()+17, gyro.GetX(), gyro.GetY()); //offset by -21 and 17
+//  Serial.print(accel.GetX());
+//  Serial.print(" ");
+//  Serial.println(accel.GetY());
+//  Serial.print(gyro.GetX());
+//  Serial.print(" ");
+//  Serial.println(gyro.GetY());
+//  Serial.print(filter.GetPitch());
+//  Serial.print(" ");
+//  Serial.println(filter.GetRoll());
+//  int limit = 17;
+//  if (filter.GetPitch() > limit || filter.GetPitch() < -limit || filter.GetRoll() > limit || filter.GetRoll() < -limit) {
+//    Serial.print(accel.GetX());
+//    Serial.print(" ");
+//    Serial.print(accel.GetY());
+//    Serial.print(" ****************** ");
+//    Serial.print(gyro.GetX());
+//    Serial.print(" ");
+//    Serial.println(gyro.GetY());
+//  }
+  motors.CalcThrustSensorAssisted(filter.GetPitch(), filter.GetRoll(), gyro.GetX(), gyro.GetY(), txrx.GetPitch(), txrx.GetRoll(), txrx.GetThrottle(), txrx.GetYaw());
 }
 
 void UpdateManual()
@@ -85,6 +91,7 @@ void Thrust()
   frontLeftEsc.writeMicroseconds(900);
   frontRightEsc.writeMicroseconds(motors.GetFrontRightThrust());
   rearLeftEsc.writeMicroseconds(motors.GetRearLeftThrust());
+  rearRightEsc.writeMicroseconds(900);
   //rearRightEsc.writeMicroseconds(motors.GetRearRightThrust());
 }
 

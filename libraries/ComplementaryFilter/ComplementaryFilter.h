@@ -2,14 +2,14 @@
 #define ComplementaryFilter_h
 
 #define ALPHA 0.6
-#define DT 0.001
+#define DT 0.074
 
 class ComplementaryFilter
 {
 	public:
-		void UpdateWithFilter(int accelXInput, int accelYInput, int gyroXInput, int gyroYInput);
+		void UpdateWithFilter(int accelXInput, int accelYInput, int gyroXInput, int gyroYInput); // todo: review +/- on filtered angle
 		float GetPitch() { return pitch; }
-		float GetRoll() { return roll; }
+		float GetRoll() { return -roll; }
 	private:
 		float pitch;
 		float roll;
@@ -21,3 +21,5 @@ class ComplementaryFilter
 };
 
 #endif
+
+// https://sites.google.com/site/myimuestimationexperience/filters/complementary-filter

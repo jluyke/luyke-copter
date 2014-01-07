@@ -1,26 +1,33 @@
 #include "I2C.h"
-#include "Arduino.h"
-#include "Wire.h"
 
-void I2C::WriteRegister(int deviceAddress, byte address, byte val) 
+I2C::I2C()
 {
-    Wire.beginTransmission(deviceAddress); // start transmission to device
-    Wire.write(address);       // send register address
+    buffer = new byte[6];
+}
+
+void I2C::WriteRegister(int device_address, byte start_address, byte val) 
+{
+    Wire.beginTransmission(device_address); // start transmission to device
+    Wire.write(start_address);       // send register address
     Wire.write(val);         // send value to write
     Wire.endTransmission();     // end transmission
 }
 
-int I2C::ReadRegister(int deviceAddress, byte address)
+byte *I2C::ReadRegister(int device_address, byte start_address, int num_of_bytes)
 {
-    Wire.beginTransmission(deviceAddress);
-    Wire.write(address); // register to read
+    //TWDR = device_address;
+    Wire.beginTransmission(device_address);
+    Wire.write(start_address); // register to read
     Wire.endTransmission();
 
-    Wire.requestFrom(deviceAddress, 1); // read a byte
-    
-	int v = 0;
-	while (Wire.available()) {
-    	v = Wire.read();
+    // Wire.beginTransmission(device_address);
+    Wire.requestFrom(device_address, num_of_bytes); // read bytes
+    while (Wire.available() < num_of_bytes) { Serial.println("waiting 50us"); delayMicroseconds(50); };
+    int i = 0;
+    while (Wire.available()) {
+        buffer[i] = Wire.read();
+        i++;
     }
-    return v;
+    // Wire.endTransmission();
+    return buffer;
 }
