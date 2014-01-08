@@ -6,12 +6,12 @@
 class TxRx
 {
 	public:
-		void Receive();
-		void Update();
-		int GetRoll() { return roll; }
-		int GetPitch() { return pitch; }
-		int GetThrottle() { return throttle-100; }
-		int GetYaw() { return yaw; }
+		void receive();
+		void update();
+		int get_roll() { return roll; }
+		int get_pitch() { return pitch; }
+		int get_throttle() { return throttle; }
+		int get_yaw() { return yaw; }
 	private:
 		int ch1;
 		int ch2;

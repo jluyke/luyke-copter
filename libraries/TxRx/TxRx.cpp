@@ -1,6 +1,6 @@
 #include "TxRx.h"
 
-void TxRx::Receive() 
+void TxRx::receive() 
 {
 	ch1 = pulseIn(A0, HIGH, 25000);
 	ch2 = pulseIn(A1, HIGH, 25000);
@@ -8,12 +8,12 @@ void TxRx::Receive()
 	ch4 = pulseIn(A3, HIGH, 25000);
 }
 
-void TxRx::Update()
+void TxRx::update()
 {
 	roll = 0;//ch1;
 	pitch = 0;//ch2;
 	//throttle = SmoothThrottle(ch3);
-	throttle = ch3;
+	throttle = ch3 - 100;
 	yaw = 0;//ch4;
 	//roll = ch1;
 	//pitch = ch2;

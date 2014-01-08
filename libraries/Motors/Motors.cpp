@@ -1,39 +1,38 @@
 #include "Motors.h"
 
-void Motors::Setup()
+void Motors::setup()
 {
 	double p = 2*0;
 	double i = 0.1*0;
 	double d = 60;
-	pidOutputPitch.Setup(p,i,d);
-	pidOutputRoll.Setup(p,i,d);
+	pid_pitch.setup(p,i,d);
+	pid_roll.setup(p,i,d);
 	motor_standby_speed = 900;
 }
 
-void Motors::CalcThrustSensorAssisted(float cfilterPitch, float cfilterRoll, int gyroX, int gyroY, int txPitch, int txRoll, int txThrottle, int txYaw)
+void Motors::calc_thrust_sensor_assisted(float comp_filter_pitch, float comp_filter_roll, int gyro_x, int gyro_y, int tx_pitch, int tx_roll, int tx_throttle, int tx_yaw)
 {
-	pidCFilterPitch = pidOutputPitch.Compute(0,cfilterPitch,-gyroY);
-	pidCFilterRoll = pidOutputRoll.Compute(0,cfilterRoll,-gyroX);
+	pid_computed_pitch_error = pid_pitch.compute(0,comp_filter_pitch,-gyro_y);
+	pid_computed_roll_error = pid_roll.compute(0,comp_filter_roll,-gyro_x);
 
-	if (txThrottle > motor_standby_speed) {
-		txYaw = 0;
-		//frontLeftThrust = txThrottle - pidOutputPitch - pidOutputRoll - txYaw;
-		frontRightThrust = txThrottle + (pidCFilterPitch + pidCFilterRoll) + txYaw;
-		rearLeftThrust = txThrottle + (-pidCFilterPitch - pidCFilterRoll) + txYaw;
-		//rearRightThrust = txThrottle + pidOutputPitch + pidOutputRoll - txYaw;
+	if (tx_throttle > motor_standby_speed) {
+		tx_yaw = 0;
+		//front_left_thrust = tx_throttle - (pid_computed_pitch_error - pid_computed_roll_error) - tx_yaw;
+		front_right_thrust = tx_throttle + (pid_computed_pitch_error + pid_computed_roll_error) + tx_yaw;
+		rear_left_thrust = tx_throttle + (-pid_computed_pitch_error - pid_computed_roll_error) + tx_yaw;
+		//rear_right_thrust = tx_throttle + (pid_computed_pitch_error + pid_computed_roll_error) - tx_yaw;
 	} else {
-		frontLeftThrust = motor_standby_speed;
-		frontRightThrust = motor_standby_speed;
-		rearLeftThrust = motor_standby_speed;
-		rearRightThrust = motor_standby_speed;
+		front_left_thrust = motor_standby_speed;
+		front_right_thrust = motor_standby_speed;
+		rear_left_thrust = motor_standby_speed;
+		rear_right_thrust = motor_standby_speed;
 	}
 }
 
-void Motors::CalcThrustManual(int txPitch, int txRoll, int txThrottle, int txYaw)
+void Motors::calc_thrust_manual(int tx_pitch, int tx_roll, int tx_throttle, int tx_yaw)
 {
-	//Serial.println(txThrottle);
-	frontLeftThrust = txThrottle + txPitch - txRoll - txYaw;
-	frontRightThrust = txThrottle + txPitch + txRoll + txYaw;
-	rearLeftThrust = txThrottle - txPitch - txRoll + txYaw;
-	rearRightThrust = txThrottle - txPitch + txRoll - txYaw;
+	front_left_thrust = tx_throttle + tx_pitch - tx_roll - tx_yaw;
+	front_right_thrust = tx_throttle + tx_pitch + tx_roll + tx_yaw;
+	rear_left_thrust = tx_throttle - tx_pitch - tx_roll + tx_yaw;
+	rear_right_thrust = tx_throttle - tx_pitch + tx_roll - tx_yaw;
 }

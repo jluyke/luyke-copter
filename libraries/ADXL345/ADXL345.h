@@ -8,11 +8,11 @@
 class ADXL345
 {
 	public:
-		void Setup();
-		void Receive();
-		int GetX() { return x; }
-		int GetY() { return y; }
-		int GetZ() { return z; }
+		void setup();
+		void receive();
+		int get_x() { return x; }
+		int get_y() { return y; }
+		int get_z() { return z; }
 	private:
 		I2C i2c;
 		int x;
@@ -22,5 +22,5 @@ class ADXL345
 
 #endif
 
-// Based on: https://github.com/jenschr/Arduino-libraries/blob/master/ADXL345/examples/ADXL345_no_library/BareBones_ADXL345.pde
 // http://www.analog.com/static/imported-files/data_sheets/ADXL345.pdf
+// https://github.com/jenschr/Arduino-libraries/blob/master/ADXL345/examples/ADXL345_no_library/BareBones_ADXL345.pde

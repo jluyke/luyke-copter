@@ -1,37 +1,38 @@
+// official headers
 #include <Wire.h>
 #include <Servo.h>
-//Custom headers:
+// custom headers
 #include <TxRx.h>
 #include <I2C.h>
-#include <L3G4200D.h>
 #include <ADXL345.h>
+#include <L3G4200D.h>
 #include <ComplementaryFilter.h>
-#include <Motors.h>
 #include <PID.h>
+#include <Motors.h>
 
 TxRx txrx;
-L3G4200D gyro;
 ADXL345 accel;
+L3G4200D gyro;
 ComplementaryFilter filter;
 Motors motors;
 
-Servo frontLeftEsc;
-Servo frontRightEsc;
-Servo rearLeftEsc;
-Servo rearRightEsc;
+Servo front_left_esc;
+Servo front_right_esc;
+Servo rear_left_esc;
+Servo rear_right_esc;
 
 void setup()
 {
   Wire.begin();
   
-  frontLeftEsc.attach(5);
-  frontRightEsc.attach(6);
-  rearLeftEsc.attach(9);
-  rearRightEsc.attach(10);
+  front_left_esc.attach(5);
+  front_right_esc.attach(6);
+  rear_left_esc.attach(9);
+  rear_right_esc.attach(10);
   
-  gyro.Setup(2000);
-  accel.Setup();
-  motors.Setup();
+  gyro.setup();
+  accel.setup();
+  motors.setup();
   
   Serial.begin(9600);
   Serial.println("initializing");
@@ -39,59 +40,54 @@ void setup()
 
 void loop()
 {
-  Input();
-  UpdateSensorAssisted();
-  //UpdateManual();
-  Thrust();
+  input();
+  update();
+  thrust();
   delay(1);
 }
 
-void Input() 
+void input() 
 {
-  txrx.Receive();
-  gyro.Receive();
-  accel.Receive();
+  txrx.receive();
+  gyro.receive();
+  accel.receive();
 }
 
-void UpdateSensorAssisted()
+void update()
 {
-  txrx.Update();
-  filter.UpdateWithFilter(accel.GetX()-21, accel.GetY()+17, gyro.GetX(), gyro.GetY()); //offset by -21 and 17
-//  Serial.print(accel.GetX());
+  txrx.update();
+  filter.update_filter(accel.get_x()-21, accel.get_y()+17, gyro.get_x(), gyro.get_y()); //offset by -21 and 17
+  motors.calc_thrust_sensor_assisted(filter.get_pitch(), filter.get_roll(), gyro.get_x(), gyro.get_y(), txrx.get_pitch(), txrx.get_roll(), txrx.get_throttle(), txrx.get_yaw());
+//  motors.calc_thrust_manual(txrx.get_pitch(), txrx.get_roll(), txrx.get_throttle(), txrx.get_yaw());
+
+//  Serial.print(accel.get_x());
 //  Serial.print(" ");
-//  Serial.println(accel.GetY());
-//  Serial.print(gyro.GetX());
+//  Serial.println(accel.get_y());
+//  Serial.print(gyro.get_x());
 //  Serial.print(" ");
-//  Serial.println(gyro.GetY());
-//  Serial.print(filter.GetPitch());
+//  Serial.println(gyro.get_y());
+//  Serial.print(filter.get_pitch());
 //  Serial.print(" ");
-//  Serial.println(filter.GetRoll());
+//  Serial.println(filter.get_roll());
 //  int limit = 17;
-//  if (filter.GetPitch() > limit || filter.GetPitch() < -limit || filter.GetRoll() > limit || filter.GetRoll() < -limit) {
-//    Serial.print(accel.GetX());
+//  if (filter.get_pitch() > limit || filter.get_pitch() < -limit || filter.get_roll() > limit || filter.get_roll() < -limit) {
+//    Serial.print(accel.get_x());
 //    Serial.print(" ");
-//    Serial.print(accel.GetY());
+//    Serial.print(accel.get_y());
 //    Serial.print(" ****************** ");
-//    Serial.print(gyro.GetX());
+//    Serial.print(gyro.get_x());
 //    Serial.print(" ");
-//    Serial.println(gyro.GetY());
+//    Serial.println(gyro.get_y());
 //  }
-  motors.CalcThrustSensorAssisted(filter.GetPitch(), filter.GetRoll(), gyro.GetX(), gyro.GetY(), txrx.GetPitch(), txrx.GetRoll(), txrx.GetThrottle(), txrx.GetYaw());
 }
 
-void UpdateManual()
+void thrust()
 {
-  txrx.Update();
-  motors.CalcThrustManual(txrx.GetPitch(), txrx.GetRoll(), txrx.GetThrottle(), txrx.GetYaw());
-}
-
-void Thrust()
-{
-  //frontLeftEsc.writeMicroseconds(motors.GetFrontLeftThrust());
-  frontLeftEsc.writeMicroseconds(900);
-  frontRightEsc.writeMicroseconds(motors.GetFrontRightThrust());
-  rearLeftEsc.writeMicroseconds(motors.GetRearLeftThrust());
-  rearRightEsc.writeMicroseconds(900);
-  //rearRightEsc.writeMicroseconds(motors.GetRearRightThrust());
+  //front_left_esc.writeMicroseconds(motors.get_front_left_thrust());
+  front_left_esc.writeMicroseconds(900);
+  front_right_esc.writeMicroseconds(motors.get_front_right_thrust());
+  rear_left_esc.writeMicroseconds(motors.get_rear_left_thrust());
+  rear_right_esc.writeMicroseconds(900);
+  //rear_right_esc.writeMicroseconds(motors.get_rear_right_thrust());
 }
 
