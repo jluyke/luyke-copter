@@ -1,9 +1,8 @@
 #ifndef Motors_h
 #define Motors_h
 
-#define PID_LIMIT 200
-
 #include "PID.h"
+#include "Arduino.h" // remove later
 
 class Motors
 {
@@ -20,12 +19,11 @@ class Motors
 		int front_right_thrust;
 		int rear_left_thrust;
 		int rear_right_thrust;
-		//
 		PID pid_pitch;
 		PID pid_roll;
 		double pid_computed_pitch_error;
 		double pid_computed_roll_error;
-		int motor_standby_speed;
+		int standby_speed;
 };
 
 #endif

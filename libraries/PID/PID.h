@@ -9,9 +9,7 @@ class PID
 		void setup(double p_input, double i_input, double d_input);
 		double compute(double setpoint, double filter_input, double gyro_input);
 	private:
-		double p;
-		double i;
-		double d;
+		double p, i, d;
 		double p_term, i_term, d_term;
 		double delta, last_gyro, delta_sum, delta2, delta1;
 };

@@ -58,7 +58,7 @@ void update()
   txrx.update();
   filter.update_filter(accel.get_x()-21, accel.get_y()+17, gyro.get_x(), gyro.get_y()); //offset by -21 and 17
   motors.calc_thrust_sensor_assisted(filter.get_pitch(), filter.get_roll(), gyro.get_x(), gyro.get_y(), txrx.get_pitch(), txrx.get_roll(), txrx.get_throttle(), txrx.get_yaw());
-//  motors.calc_thrust_manual(txrx.get_pitch(), txrx.get_roll(), txrx.get_throttle(), txrx.get_yaw());
+//  motors.calc_thrust_manual(txrx.get_pitch(), txrx.get_roll(), txrx.get_throttle(), txrx.get_yaw()); 
 
 //  Serial.print(accel.get_x());
 //  Serial.print(" ");
@@ -69,16 +69,6 @@ void update()
 //  Serial.print(filter.get_pitch());
 //  Serial.print(" ");
 //  Serial.println(filter.get_roll());
-//  int limit = 17;
-//  if (filter.get_pitch() > limit || filter.get_pitch() < -limit || filter.get_roll() > limit || filter.get_roll() < -limit) {
-//    Serial.print(accel.get_x());
-//    Serial.print(" ");
-//    Serial.print(accel.get_y());
-//    Serial.print(" ****************** ");
-//    Serial.print(gyro.get_x());
-//    Serial.print(" ");
-//    Serial.println(gyro.get_y());
-//  }
 }
 
 void thrust()

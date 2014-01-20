@@ -9,31 +9,27 @@ void PID::setup(double p_input, double i_input, double d_input) // todo: add in 
 
 double PID::compute(double setpoint, double filter_input, double gyro_input) // setpoint = 0 for level mode
 {
-	//int output = 0;
 	double error = setpoint - filter_input;
+
 	p_term = p * error;
-	
-	//PTerm = 0;
-	//ITerm = I * error;
+
 	i_term += i * error;
-	//ITerm = 0;
 	
 	delta = gyro_input - last_gyro;
 	last_gyro = gyro_input;
-	// deltaSum = delta1 + delta2 + delta;
-	// delta2 = delta1;
-	// delta1 = delta;
-	// deltaSum = (deltaSum/10);
-	// DTerm = deltaSum * D;
-	d_term = (delta/10)/4;
-	// Serial.print(PTerm);
-	// Serial.print(" ");
-	// Serial.print(ITerm);
-	// Serial.print(" ");
-	// Serial.println(DTerm);
-	// PTerm = 0;
-	//ITerm = 0;
-	//DTerm = 0;
+	delta_sum = delta1 + delta2 + delta;
+	delta2 = delta1;
+	delta1 = delta;
+	d_term = (delta_sum/(double)20) * d;
+  d_term *= abs(d_term);
 
+	// d_term = ((delta/(double)10)/(double)4) * d; // alternative to above
+
+	// p_term = 0;
+	// i_term = 0;
+	// d_term = 0;
+  p_term = constrain(p_term, -50, 50);
+  i_term = constrain(i_term, -50, 50);
+  d_term = constrain(d_term, -100, 100);
 	return p_term + i_term - d_term;
 }
