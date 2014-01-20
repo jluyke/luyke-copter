@@ -2,7 +2,7 @@
 
 void TxRx::receive() 
 {
-	switch(read_switcher) {
+	switch(read_switcher) { // reads one channel per cycle, reduced cycle time from 73ms to ~20ms
 	case 1:
 		rx_ch1 = pulseIn(A0, HIGH, 25000);
 		break;

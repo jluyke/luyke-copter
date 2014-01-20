@@ -2,7 +2,7 @@
 #define ComplementaryFilter_h
 
 #define ALPHA 0.6
-#define DT 0.020
+#define DT 0.020 // cycle time, currently ~20ms
 
 class ComplementaryFilter
 {
