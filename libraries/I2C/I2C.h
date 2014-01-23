@@ -6,12 +6,12 @@
 
 class I2C
 {
-	public:
-		I2C();
-		void write_register(int device_address, byte start_address, byte val); //change int to byte?
-		byte *read_register(int device_address, byte start_address, int num_of_bytes);
-	private:
-		byte *buffer;
+  public:
+    I2C();
+    void write_register(int device_address, byte start_address, byte val); //change int to byte?
+    byte *read_register(int device_address, byte start_address, int num_of_bytes);
+  private:
+    byte *buffer;
 };
 
 #endif

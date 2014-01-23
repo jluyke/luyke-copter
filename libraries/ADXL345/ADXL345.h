@@ -7,17 +7,17 @@
 
 class ADXL345
 {
-	public:
-		void setup();
-		void receive();
-		int get_x() { return x; }
-		int get_y() { return y; }
-		int get_z() { return z; }
-	private:
-		I2C i2c;
-		int x;
-		int y;
-		int z;
+  public:
+    void setup();
+    void receive();
+    int get_x() { return x; }
+    int get_y() { return y; }
+    int get_z() { return z; }
+  private:
+    I2C i2c;
+    int x;
+    int y;
+    int z;
 };
 
 #endif

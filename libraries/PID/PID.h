@@ -5,13 +5,13 @@
 
 class PID
 {
-	public:
-		void setup(double p_input, double i_input, double d_input);
-		double compute(double setpoint, double input);
-	private:
-		double p, i, d;
-		double p_term, i_term, d_term;
-		double error, delta, last_input;
+  public:
+    void setup(double p_input, double i_input, double d_input);
+    double compute(double setpoint, double input);
+  private:
+    double p, i, d;
+    double p_term, i_term, d_term;
+    double error, delta, last_input;
 };
 
 #endif
