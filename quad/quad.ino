@@ -34,8 +34,7 @@ void setup()
   accel.setup();
   motors.setup();
   
-  Serial.begin(9600);
-  Serial.println("initializing");
+  serial_init(9600);
 }
 
 void loop()
@@ -57,15 +56,15 @@ void update()
 {
   txrx.update();
   filter.update_filter(accel.get_x()-21, accel.get_y()+17, gyro.get_x(), gyro.get_y()); //offset by -21 and 17
-  motors.calc_thrust_sensor_assisted(filter.get_pitch(), filter.get_roll(), gyro.get_x(), gyro.get_y(), txrx.get_pitch(), txrx.get_roll(), txrx.get_throttle(), txrx.get_yaw());
-//  motors.calc_thrust_manual(txrx.get_pitch(), txrx.get_roll(), txrx.get_throttle(), txrx.get_yaw()); 
+  motors.calc_thrust_level_mode(filter.get_pitch(), filter.get_roll(), gyro.get_x(), gyro.get_y(), txrx.get_pitch(), txrx.get_roll(), txrx.get_throttle(), txrx.get_yaw());
+//  motors.calc_thrust_debug(txrx.get_pitch(), txrx.get_roll(), txrx.get_throttle(), txrx.get_yaw()); 
 
 //  Serial.print(accel.get_x());
 //  Serial.print(" ");
 //  Serial.println(accel.get_y());
-//  Serial.print(gyro.get_x());
+//  Serial.print(-gyro.get_x());
 //  Serial.print(" ");
-//  Serial.println(gyro.get_y());
+//  Serial.println(-gyro.get_y());
 //  Serial.print(filter.get_pitch());
 //  Serial.print(" ");
 //  Serial.println(filter.get_roll());
@@ -79,5 +78,11 @@ void thrust()
   rear_left_esc.writeMicroseconds(motors.get_rear_left_thrust());
   rear_right_esc.writeMicroseconds(900);
   //rear_right_esc.writeMicroseconds(motors.get_rear_right_thrust());
+}
+
+void serial_init(int baud)
+{
+  Serial.begin(baud);
+  Serial.println("initializing");
 }
 

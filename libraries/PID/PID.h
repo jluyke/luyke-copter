@@ -7,11 +7,13 @@ class PID
 {
 	public:
 		void setup(double p_input, double i_input, double d_input);
-		double compute(double setpoint, double filter_input, double gyro_input);
+		double compute(double setpoint, double input);
 	private:
 		double p, i, d;
 		double p_term, i_term, d_term;
-		double delta, last_gyro, delta_sum, delta2, delta1;
+		double error, delta, last_input;
 };
 
 #endif
+
+// http://brettbeauregard.com/blog/2011/04/improving-the-beginners-pid-introduction/

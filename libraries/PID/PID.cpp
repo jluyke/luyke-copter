@@ -1,35 +1,27 @@
 #include "PID.h"
 
-void PID::setup(double p_input, double i_input, double d_input) // todo: add in sample time like in pid_v1 to different boards
+void PID::setup(double p_input, double i_input, double d_input)
 {
 	p = p_input;
 	i = i_input;
 	d = d_input;
 }
 
-double PID::compute(double setpoint, double filter_input, double gyro_input) // setpoint = 0 for level mode
+double PID::compute(double setpoint, double input) // todo: remove derivative kick via dt
 {
-	double error = setpoint - filter_input;
-
-	p_term = p * error;
-
-	i_term += i * error;
-	
-	delta = gyro_input - last_gyro;
-	last_gyro = gyro_input;
-	delta_sum = delta1 + delta2 + delta;
-	delta2 = delta1;
-	delta1 = delta;
-	d_term = (delta_sum/(double)20) * d;
-  d_term *= abs(d_term);
-
-	// d_term = ((delta/(double)10)/(double)4) * d; // alternative to above
-
-	// p_term = 0;
-	// i_term = 0;
-	// d_term = 0;
-  p_term = constrain(p_term, -50, 50);
+	error = setpoint - input;
+  // P
+  p_term = (error/(double)100) * p;
+  p_term = constrain(p_term, -100, 100);
+  // I
+	i_term += (i * error)/(double)100;
   i_term = constrain(i_term, -50, 50);
+  // D
+	delta = input - last_input;
+  delta = constrain(delta, -800, 800); // gyro value 800 max per multiwii
+	last_input = input;
+  d_term = (delta/(double)100) * d;
   d_term = constrain(d_term, -100, 100);
+  //
 	return p_term + i_term - d_term;
 }
