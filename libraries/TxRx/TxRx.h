@@ -22,10 +22,6 @@ class TxRx
     int throttle;
     int yaw;
     uint8_t read_switcher;
-    //Smoothing variables
-    //int SmoothThrottle(int th);
-    //int throttleSmooth[5] = {0, 0, 0, 0, 0};
-    //int ind = 0;
 };
 
 #endif

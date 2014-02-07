@@ -2,7 +2,7 @@
 
 void TxRx::receive() 
 {
-  switch(read_switcher) { // reads one channel per cycle, reduced cycle time from 73ms to ~20ms
+  switch(read_switcher) { // reads one channel per cycle, this reduced cycle time from ~70ms to ~20ms
   case 1:
     rx_ch1 = pulseIn(A0, HIGH, 25000);
     break;
@@ -24,7 +24,6 @@ void TxRx::update()
 {
   roll = 0; // ch1;
   pitch = 0; // ch2;
-  // throttle = SmoothThrottle(ch3);
   throttle = rx_ch3 - 100;
   yaw = 0; // ch4;
   // roll = ch1;
@@ -34,15 +33,3 @@ void TxRx::update()
   // pitch /= 8;
   // yaw /= 8;
 }
-
-/**int TxRx::SmoothThrottle(int th)
-{
-  int avg = 0;
-  throttleSmooth[ind] = th;
-  for (int i = 0; i < 5; i++) {
-    avg += throttleSmooth[i];
-  }
-  ind++;
-  if (ind == 5) { ind = 0; }
-  return avg/5;
-}**/
