@@ -1,30 +1,25 @@
 #include "I2C.h"
 
-I2C::I2C()
-{
-  buffer = new byte[6];
-}
-
-void I2C::write_register(int device_address, byte start_address, byte val) 
-{
-  Wire.beginTransmission(device_address); // start transmission to device
-  Wire.write(start_address); // send register address
-  Wire.write(val); // send value to write
-  Wire.endTransmission(); // end transmission
-}
-
-byte *I2C::read_register(int device_address, byte start_address, int num_of_bytes)
+void I2C::write_register(uint8_t device_address, byte start_address, byte val) 
 {
   Wire.beginTransmission(device_address);
-  Wire.write(start_address); // register to read
+  Wire.write(start_address); // send register address
+  Wire.write(val); // send value to register
   Wire.endTransmission();
+}
 
-  Wire.requestFrom(device_address, num_of_bytes); // read bytes
-  while (Wire.available() < num_of_bytes) { Serial.println("waiting 50us"); delayMicroseconds(50); };
-  int i = 0;
-  while (Wire.available()) {
-    buffer[i] = Wire.read();
-    i++;
+byte *I2C::read_register(uint8_t device_address, byte start_address, uint8_t num_of_bytes)
+{
+  // setup register to read
+  Wire.beginTransmission(device_address);
+  Wire.write(start_address);
+  Wire.endTransmission();
+  // start request
+  Wire.requestFrom(device_address, num_of_bytes);
+  while (Wire.available() < num_of_bytes) { Serial.println("waiting 50us - should not happen"); delayMicroseconds(50); };
+  byte *buffer = new byte[num_of_bytes];
+  for (uint8_t counter = 0; counter < num_of_bytes; counter++) {
+    buffer[counter] = Wire.read();
   }
   return buffer;
 }
