@@ -1,42 +1,32 @@
 #include "Motors.h"
 
-void Motors::setup()
+void Motors::setup_pids()
 {
-  setup_acro_pids(0.5,0,5);
-  setup_level_pids(25,0,500);
-  standby_speed = 900;
+  // Acro mode
+  pid_acro_pitch = new PID(0.1, 0.005, 1);
+  pid_acro_roll = new PID(0.1, 0.005, 1);
+  // Level mode
+  pid_level_pitch = new PID(20, 0.1, 200);
+  pid_level_roll = new PID(20, 0.1, 200);
 }
 
-void Motors::setup_acro_pids(double p, double i, double d)
+void Motors::calc_thrust_level_mode(float angle_pitch, float angle_roll, int gyro_x, int gyro_y, int tx_pitch, int tx_roll, int tx_throttle, int tx_yaw)
 {
-  pid_acro_pitch.setup(p,i,d);
-  pid_acro_roll.setup(p,i,d);
-}
-
-void Motors::setup_level_pids(double p, double i, double d)
-{
-  pid_level_pitch.setup(p,i,d);
-  pid_level_roll.setup(p,i,d);
-}
-
-void Motors::calc_thrust_level_mode(float comp_filter_pitch, float comp_filter_roll, int gyro_x, int gyro_y, int tx_pitch, int tx_roll, int tx_throttle, int tx_yaw)
-{
-  total_pitch = pid_acro_pitch.compute(0,-gyro_y) + pid_level_pitch.compute(0,comp_filter_pitch);
-  total_roll = pid_acro_roll.compute(0,-gyro_x) + pid_level_roll.compute(0,comp_filter_roll);
+  total_pitch = pid_acro_pitch->compute(0, -gyro_y) + pid_level_pitch->compute(0, angle_pitch);
+  total_roll = pid_acro_roll->compute(0, -gyro_x) + pid_level_roll->compute(0, angle_roll);
   // Serial.print(total_pitch);
   // Serial.print(" ");
   // Serial.println(total_roll);
-  if (tx_throttle > standby_speed) {
-    tx_yaw = 0;
-    //front_left_thrust = tx_throttle + (total_pitch - total_roll) - tx_yaw;
+  if (tx_throttle > STANDBY_SPEED) {
+    // front_left_thrust = tx_throttle + (total_pitch - total_roll) - tx_yaw; // disabled for testing
     front_right_thrust = tx_throttle + (total_pitch + total_roll) + tx_yaw;
     rear_left_thrust = tx_throttle + (-total_pitch - total_roll) + tx_yaw;
-    //rear_right_thrust = tx_throttle + (-total_pitch + total_roll) - tx_yaw;
+    // rear_right_thrust = tx_throttle + (-total_pitch + total_roll) - tx_yaw;
   } else {
-    front_left_thrust = standby_speed;
-    front_right_thrust = standby_speed;
-    rear_left_thrust = standby_speed;
-    rear_right_thrust = standby_speed;
+    front_left_thrust = STANDBY_SPEED;
+    front_right_thrust = STANDBY_SPEED;
+    rear_left_thrust = STANDBY_SPEED;
+    rear_right_thrust = STANDBY_SPEED;
   }
 }
 
