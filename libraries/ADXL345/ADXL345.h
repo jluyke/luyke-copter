@@ -15,12 +15,17 @@ class ADXL345
     int get_z() { return z; }
   private:
     I2C i2c;
-    int x;
-    int y;
-    int z;
+    int x, y, z;
 };
 
 #endif
 
+// References
 // http://www.analog.com/static/imported-files/data_sheets/ADXL345.pdf
 // https://github.com/jenschr/Arduino-libraries/blob/master/ADXL345/examples/ADXL345_no_library/BareBones_ADXL345.pde
+
+// Usage
+// ADXL345 accel;
+// accel.setup();
+// accel.receive();
+// accel.get_x(); ...etc

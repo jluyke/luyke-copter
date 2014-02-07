@@ -2,7 +2,7 @@
 
 void ADXL345::setup()
 {
-  delay(10); // from multiwii:
+  delay(10);
   i2c.write_register(DEVICE_ADDRESS, 0x2D, 1<<3); // power ctrl -- value: set measure bit 3 on
   i2c.write_register(DEVICE_ADDRESS, 0x31, 0x0B); // data_format -- value: set bits 3(full range) and 1 0 on (+/- 16g)
   i2c.write_register(DEVICE_ADDRESS, 0x2C, 0x09); // bw_rate -- value: rate=50hz, bw=20hz
@@ -15,4 +15,5 @@ void ADXL345::receive()
   x = (buf[1] << 8) | buf[0];
   y = (buf[3] << 8) | buf[2];
   z = (buf[5] << 8) | buf[4];
+  delete buf;
 }
