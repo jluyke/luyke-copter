@@ -24,16 +24,16 @@ Servo rear_right_esc;
 void setup()
 {
   Wire.begin();
-  
+  // attach servo variable to pin
   front_left_esc.attach(5);
   front_right_esc.attach(6);
   rear_left_esc.attach(9);
   rear_right_esc.attach(10);
-  
+  // setup sensors, etc.
   gyro.setup();
   accel.setup();
-  motors.setup();
-  
+  motors.setup_pids();
+  // optional - for debugging
   serial_init(9600);
 }
 
@@ -73,16 +73,16 @@ void update()
 void thrust()
 {
   //front_left_esc.writeMicroseconds(motors.get_front_left_thrust());
-  front_left_esc.writeMicroseconds(900);
+  front_left_esc.writeMicroseconds(850); // disabled for testing
   front_right_esc.writeMicroseconds(motors.get_front_right_thrust());
   rear_left_esc.writeMicroseconds(motors.get_rear_left_thrust());
-  rear_right_esc.writeMicroseconds(900);
+  rear_right_esc.writeMicroseconds(850);
   //rear_right_esc.writeMicroseconds(motors.get_rear_right_thrust());
 }
 
-void serial_init(int baud)
+void serial_init(int baud_rate)
 {
-  Serial.begin(baud);
+  Serial.begin(baud_rate);
   Serial.println("initializing");
 }
 
