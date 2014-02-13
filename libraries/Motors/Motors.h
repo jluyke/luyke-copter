@@ -21,7 +21,7 @@ class Motors
     PID *pid_acro_roll;
     PID *pid_level_pitch;
     PID *pid_level_roll;
-    double total_pitch, total_roll;
+    float total_pitch, total_roll;
     int standby_speed;
 };
 
