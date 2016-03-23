@@ -3,9 +3,8 @@ luyke-copter (work in progress)
 
 About
 -----
-Working on my quadcopter is my side project and hobby. I built and coded this with lots of help from Google searches. I've included links to references in the respective header files.
 
-I am using the Arduino Duemilanove and its libraries use C/C++. The "custom headers" comment in the quad.ino file refers to the headers in this repository. For the logic of the main loop() method, I took the model of a game loop: "input, update, render"; and used: "input(); update(); thrust();"
+I built and coded this using countless Google searches. References and credit given in the respective header files.
 
 Build
 -----
@@ -37,7 +36,7 @@ Build
 
 Contact
 -------
-[@jluyke](https://twitter.com/jluyke) on Twitter
+[@jordanluyke](https://twitter.com/jordanluyke) on Twitter
 
 Todo
 ----
